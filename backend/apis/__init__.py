@@ -10,39 +10,60 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'abc'
 app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
 db = SQLAlchemy(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
-
-# https://stackoverflow.com/questions/71283071/how-to-restrict-admin-access-with-flask-admin
+login = LoginManager(app)
 
 
-class users(db.Model,UserMixin):
-    id = db.Column(db.Integer,primary_key=True)
-    rollno = db.Column(db.String(200),unique=False,nullable=False)
-    password = db.Column(db.String(200),unique=False,nullable=False)
+class Users(db.Model,UserMixin):
+    __tablename__ = "user"
+    id = db.Column(db.Integer, primary_key=True)
+    rollno = db.Column(db.String(6),unique=True)
+    name = db.Column(db.String(40),unique=False)
+    year = db.Column(db.Integer,nullable=False)
+    program = db.Column(db.String(40),nullable=False)
+    password = db.Column(db.String(30),unique=False)
+db.create_all()
 
 class course(db.Model,UserMixin):
     id = db.Column(db.String(6),primary_key=True)
-    name = db.Column(db.String(100),unique=False,nullable=False)
-    
+    code = db.Column(db.String(6),nullable=False)
+    name = db.Column(db.String(40),nullable=False)
+db.create_all()
+
+class timetable(db.Model,UserMixin):
+    id = db.Column(db.String(6),primary_key=True)
+    year = db.Column(db.Integer,nullable=False)
+    program = db.Column(db.String(40),nullable=False)
+    day = db.Column(db.String(40),nullable=False)
+    hour = db.Column(db.String(40),nullable=False)
+    stTime = db.Column(db.DateTime(40),nullable=False)
+    endTime = db.Column(db.DateTime(40),nullable=False)
 db.create_all()
 
 class AdminHome(AdminIndexView):
     def is_accessible(self):
         return current_user.is_authenticated
-    def inaccessible_callback(self,name,**kwargs):
-        return redirect('/admin')
 
-admin = Admin(app,name='Control',index_view=AdminHome())
+user = Users(rollno='18pd28',name='Raghul',year='4',program='Data Science',password='25112000')
+db.session.add(user)
+db.session.commit()
 
-@login_manager.user_loader
-def user_loader(user_id):
-    return users.query.get(int(user_id))
+admin = Admin(app, name='microblog', template_mode='bootstrap3')
+admin.add_view(ModelView(Users, db.session))
+admin.add_view(ModelView(course, db.session))
+admin.add_view(ModelView(timetable, db.session))
 
-@app.route('/a')
+
+@login.user_loader
+def load_user(id):
+    return Users.query.get(id)
+
+@app.route('/')
 def home():
-    return 'asd'
+    return 'Welcome to Attendance Tracker'
 
+
+    
 
 if __name__ == '__main__':
+    
     app.run(debug=True)

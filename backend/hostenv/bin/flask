@@ -1,4 +1,4 @@
-#!/home/csuser/Documents/attendanceTracker/backend/hostenv/bin/python3
+#!/Users/raghulprashathka/Documents/work/Timetable/backend/hostenv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
