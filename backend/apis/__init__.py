@@ -43,9 +43,9 @@ class AdminHome(AdminIndexView):
     def is_accessible(self):
         return current_user.is_authenticated
 
-user = Users(rollno='18pd28',name='Raghul',year='4',program='Data Science',password='25112000')
-db.session.add(user)
-db.session.commit()
+# user = Users(rollno='18pd28',name='Raghul',year='4',program='Data Science',password='25112000')
+# db.session.add(user)
+# db.session.commit()
 
 admin = Admin(app, name='microblog', template_mode='bootstrap3')
 admin.add_view(ModelView(Users, db.session))
