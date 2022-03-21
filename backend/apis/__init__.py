@@ -12,31 +12,31 @@ app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
 db = SQLAlchemy(app)
 login = LoginManager(app)
 
-
 class Users(db.Model,UserMixin):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     rollno = db.Column(db.String(6),unique=True)
     name = db.Column(db.String(40),unique=False)
-    year = db.Column(db.Integer,nullable=False)
-    program = db.Column(db.String(40),nullable=False)
+    year = db.Column(db.Integer)
+    program = db.Column(db.String(40))
     password = db.Column(db.String(30),unique=False)
 db.create_all()
 
 class course(db.Model,UserMixin):
-    id = db.Column(db.String(6),primary_key=True)
-    code = db.Column(db.String(6),nullable=False)
-    name = db.Column(db.String(40),nullable=False)
+    id = db.Column(db.Integer,primary_key=True)
+    code = db.Column(db.String(6))
+    name = db.Column(db.String(40))
 db.create_all()
 
 class timetable(db.Model,UserMixin):
-    id = db.Column(db.String(6),primary_key=True)
-    year = db.Column(db.Integer,nullable=False)
-    program = db.Column(db.String(40),nullable=False)
-    day = db.Column(db.String(40),nullable=False)
-    hour = db.Column(db.String(40),nullable=False)
-    stTime = db.Column(db.DateTime(40),nullable=False)
-    endTime = db.Column(db.DateTime(40),nullable=False)
+    id = db.Column(db.Integer,primary_key=True)
+    course = db.Column(db.String(40))
+    year = db.Column(db.Integer)
+    program = db.Column(db.String(40))
+    day = db.Column(db.String(40))
+    hour = db.Column(db.Integer)
+    stTime = db.Column(db.DateTime(40))
+    endTime = db.Column(db.DateTime(40))
 db.create_all()
 
 class AdminHome(AdminIndexView):
@@ -47,11 +47,10 @@ class AdminHome(AdminIndexView):
 # db.session.add(user)
 # db.session.commit()
 
-admin = Admin(app, name='microblog', template_mode='bootstrap3')
+admin = Admin(app, name='Attendance Tracker', template_mode='bootstrap3')
 admin.add_view(ModelView(Users, db.session))
 admin.add_view(ModelView(course, db.session))
 admin.add_view(ModelView(timetable, db.session))
-
 
 @login.user_loader
 def load_user(id):
@@ -60,9 +59,6 @@ def load_user(id):
 @app.route('/')
 def home():
     return 'Welcome to Attendance Tracker'
-
-
-    
 
 if __name__ == '__main__':
     
