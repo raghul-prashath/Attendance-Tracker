@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/raghulprashathka/Documents/work/Timetable/backend/hostenv"
+set -gx VIRTUAL_ENV "/Users/raghulprashathka/Documents/work/Timetable/backend/macEnv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
@@ -52,8 +52,8 @@ if test -z "$VIRTUAL_ENV_DISABLE_PROMPT"
         set -l old_status $status
 
         # Prompt override?
-        if test -n "(hostenv) "
-            printf "%s%s" "(hostenv) " (set_color normal)
+        if test -n "(macEnv) "
+            printf "%s%s" "(macEnv) " (set_color normal)
         else
             # ...Otherwise, prepend env
             set -l _checkbase (basename "$VIRTUAL_ENV")

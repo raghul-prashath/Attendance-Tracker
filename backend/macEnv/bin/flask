@@ -1,4 +1,4 @@
-#!/Users/raghulprashathka/Documents/work/Timetable/backend/hostenv/bin/python
+#!/Users/raghulprashathka/Documents/work/Timetable/backend/macEnv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
