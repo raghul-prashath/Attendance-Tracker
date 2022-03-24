@@ -1,70 +1,44 @@
-from flask import Flask,redirect
-from flask_admin import BaseView,expose,Admin,AdminIndexView
+#Flask
+from flask import Flask,request,render_template,redirect, url_for,flash,jsonify,make_response
+from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager,jwt_required,create_access_token,jwt_refresh_token_required
+from flask_jwt_extended import create_refresh_token,get_jwt_identity,set_access_cookies,set_refresh_cookies, unset_jwt_cookies
+from flask_restful import Resource, Api
+from flask_admin import Admin, AdminIndexView
+from flask_admin.menu import MenuLink
 from flask_admin.contrib.sqla import ModelView
+from flask_login import LoginManager,UserMixin,login_user,current_user,logout_user,login_required
+#SQLAlchemy
+from sqlalchemy import event
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin,login_user,logout_user,login_required,LoginManager,current_user
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///timetable.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'abc'
-app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
-db = SQLAlchemy(app)
-login = LoginManager(app)
+app.config.from_object("config.DevelopmentConfig")
 
-class Users(db.Model,UserMixin):
-    __tablename__ = 'users'
-    rollNo = db.Column(db.String(6),unique=True,primary_key=True)
-    studentName = db.Column(db.String(40),unique=False)
-    accYear = db.Column(db.Integer)
-    programme = db.Column(db.String(40))
-    password = db.Column(db.String(30),unique=False)
+bcrypt = Bcrypt(app)
+jwt = JWTManager(app)
+api = Api(app)
+login_manager= LoginManager()
+login_manager.init_app(app)
+db= SQLAlchemy(app)
+
+from apis.models import MyAdminIndexView
+admin=Admin(app,name='Admin Panel',template_mode='bootstrap3',index_view=MyAdminIndexView())
+
+from apis.handleDbms import Roles,Users,Course,Timetable,db
+from apis.handleDbms import handleDb
+from apis.handleDbms import selectRoll,checkUserId
+from apis.handleAdmin import Controllers
+from apis.handleAdmin import hashPass,load_user,adminLogin,adminLogout
+from apis.appModels import register,login,getFeedById,refresh,logout
+from apis.appModels import user,access,tokenData
+from apis.handleAdminPanel import addView
+from apis.routes import routesApi
+
+routesApi()
+addView()
 db.create_all()
 
-class course(db.Model,UserMixin):
-    __tablename__ = 'course'
-    courseCode = db.Column(db.String(6),primary_key=True)
-    courseName = db.Column(db.String(40))
-    rollNo = db.column(db.String(6))
-    totalP = db.column(db.Integer)
-    totalA = db.column(db.Integer)
-    totalC = db.column(db.Integer)
-    attendancePercentage = db.column(db.Integer)
-db.create_all()
+if __name__=='__main__':
+    app.run()
 
-class timetable(db.Model,UserMixin):
-    __tablename__ = 'timetable'
-    id = db.Column(db.Integer,primary_key=True)
-    courseCode = db.Column(db.String(40), ForeignKey('parent.id'))
-    accYear = db.Column(db.Integer)
-    programme = db.Column(db.String(40))
-    day = db.Column(db.String(40))
-    stHour = db.Column(db.Integer)
-    endHour = db.Column(db.Integer)
-    stTime = db.Column(db.DateTime(40))
-    endTime = db.Column(db.DateTime(40))
-db.create_all()
-
-class AdminHome(AdminIndexView):
-    def is_accessible(self):
-        return current_user.is_authenticated
-
-user = Users(rollNo='18pd28',studentName='Raghul Prashath K A',accYear='4',programme='Data Science',password='25112000')
-db.session.add(user)
-db.session.commit()
-
-admin = Admin(app, name='Attendance Tracker', template_mode='bootstrap3')
-admin.add_view(ModelView(Users, db.session))
-admin.add_view(ModelView(course, db.session))
-admin.add_view(ModelView(timetable, db.session))
-
-@login.user_loader
-def load_user(id):
-    return Users.query.get(id)
-
-@app.route('/')
-def home():
-    return 'Welcome to Attendance'
-
-if __name__ == '__main__':
-    app.run(debug=True)
