@@ -20,25 +20,29 @@ jwt = JWTManager(app)
 api = Api(app)
 login_manager= LoginManager()
 login_manager.init_app(app)
-db= SQLAlchemy(app)
+db = SQLAlchemy(app)
+
 
 from apis.models import MyAdminIndexView
-admin=Admin(app,name='Admin Panel',template_mode='bootstrap3',index_view=MyAdminIndexView())
+admin = Admin(app,name='Admin Panel',template_mode='bootstrap3',index_view=MyAdminIndexView())
 
-from apis.handleDbms import Roles,Users,Course,Timetable,db
-from apis.handleDbms import handleDb
+from apis.handleDbms import Roles,Users,Course,Timetable
+from apis.handleDbms import handleDb,getSpecialRights,SpecialRights
+handleDb()
 from apis.handleDbms import selectRoll,checkUserId
-from apis.handleAdmin import Controllers
+from apis.handleAdmin import Controllers, UsersController, RolesController, spController
 from apis.handleAdmin import hashPass,load_user,adminLogin,adminLogout
-from apis.appModels import register,login,getFeedById,refresh,logout
-from apis.appModels import user,access,tokenData
+from apis.appModels import register,login,refresh,logout
+from apis.appModels import user,tokenData
 from apis.handleAdminPanel import addView
 from apis.routes import routesApi
 
+
 routesApi()
 addView()
-db.create_all()
+
 
 if __name__=='__main__':
     app.run()
+    
 

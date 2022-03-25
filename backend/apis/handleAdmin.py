@@ -5,6 +5,47 @@ class Controllers(ModelView):
         return current_user.is_authenticated
     def inaccessible_callback(self,name,**kwargs):
         return redirect(url_for('adminLogin'))
+
+class UsersController(Controllers):
+    column_list = ('adminId', 'rollNo', 'name', 'programme', 'accYear')
+    def is_accessible(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[7]) and bool(record[3]):
+                return True
+        return False
+        
+    @property
+    def can_create(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[7]) and bool(record[2]):
+                return True
+        return False
+
+    @property
+    def can_edit(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[7]) and bool(record[4]):
+                return True
+        return False
+
+    @property
+    def can_delete(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[7]) and bool(record[5]):
+                return True
+        return False
+
+
+class RolesController(Controllers):
+    column_list = ('adminId', 'role')
+
+class spController(Controllers):
+    column_list = ('adminId','create','read','update','delete','rolesTable','usersTable','courseTable','timeTable')
+
         
 @event.listens_for(Users.password,'set',retval=True)
 def hashPass(target,value,oldvalue,initiator):
@@ -28,18 +69,18 @@ def adminLogin():
             flash('Invalid credentials')
             return render_template('login.html')
 
-    elif bcrypt.check_password_hash(records[6], password):
-        if records[1]!=2:
-            login_user(user)
-            flash('Logged in successfully.')
-            return redirect(url_for('admin.index'))
-        else:
+        elif bcrypt.check_password_hash(records[6], password):
+            if records[0]!=2:
+                login_user(user)
+                flash('Logged in successfully.')
+                return redirect(url_for('admin.index'))
+            else:
+                flash('Invalid credentials')
+                return render_template('login.html')
+
+        else:   
             flash('Invalid credentials')
             return render_template('login.html')
-
-    else:   
-        flash('Invalid credentials')
-        return render_template('login.html')
 
     return render_template('login.html')
 

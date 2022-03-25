@@ -5,8 +5,10 @@ class Roles(db.Model):
     adminId= db.Column('adminId', db.Integer,primary_key=True)
     role=db.Column('role', db.String,unique=True, nullable=False)
     
-    def __init__(self, role):
-        self.role=role
+    def __init__(self, adminId, role):
+        self.role = role
+        self.adminId = adminId
+
     
 class Users(db.Model, UserMixin):
     __tablename__ = "users"
@@ -25,21 +27,22 @@ class Users(db.Model, UserMixin):
         self.programme = programme
         self.rollNo = rollNo
         self.accYear = accYear
-        self.password = password
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
         
     def get_id(self):
         return (self.userId)
+
 
 class Course(db.Model):
     __tablename__ = 'course'
     courseId = db.Column('courseId', db.Integer, primary_key=True)
     courseCode = db.Column('courseCode', db.String)
     courseName = db.Column('courseName', db.String)
-    rollNo = db.column('rollNo', db.String)
-    totalP = db.column('totalPresent', db.Integer)
-    totalA = db.column('totalAbsent', db.Integer)
-    totalC = db.column('totalClass', db.Integer)
-    atPercent = db.column('Percent', db.Integer)
+    rollNo = db.Column('rollNo', db.String)
+    totalP = db.Column('totalPresent', db.Integer)
+    totalA = db.Column('totalAbsent', db.Integer)
+    totalC = db.Column('totalClass', db.Integer)
+    atPercent = db.Column('Percent', db.Integer)
 
     def __init__(self, courseCode, courseName, rollNo, totalP, totalA, totalC, atPercent):
         self.courseCode = courseCode
@@ -52,6 +55,7 @@ class Course(db.Model):
         
     def get_id(self):
         return (self.courseId)
+
 
 class Timetable(db.Model):
     __tablename__ = 'timetable'
@@ -80,23 +84,66 @@ class Timetable(db.Model):
     def get_id(self):
         return (self.classId)
 
-db.create_all()
 
+class SpecialRights(db.Model):
+    __tablename__="specialRights"
+    colId= db.Column('colId',db.Integer,primary_key=True)
+    # userId=db.Column('userId',db.Integer,db.ForeignKey('users.userId'))
+    # users = db.relationship("Users", backref='userId_specialRights')
+
+    userId=db.Column('adminId',db.Integer,db.ForeignKey('roles.adminId'))
+    adminId = db.relationship("Roles", backref='userId_specialRights')
+
+    create = db.Column('create',db.Boolean)
+    read = db.Column('read',db.Boolean)
+    update = db.Column('update',db.Boolean)
+    delete = db.Column('delete',db.Boolean)
+    rolesTable=db.Column('rolesTable',db.Boolean)
+    usersTable=db.Column('usersTable',db.Boolean)
+    courseTable=db.Column('userLikeTable',db.Boolean)
+    timeTable=db.Column('commentTable',db.Boolean)
+    
+
+    def __init__(self,userId,create,read,update,delete,rolesTable,usersTable,courseTable,timeTable):
+        self.userId=userId
+        self.create = create
+        self.read = read
+        self.update = update
+        self.delete = delete
+        self.rolesTable=rolesTable
+        self.usersTable=usersTable
+        self.courseTable=courseTable
+        self.timeTable=timeTable
+        
 # handleDb to Handle initial Db operations
 def handleDb():
+    db.create_all()    
     if not Roles.query.all():
-        db.session.add(Roles('admin'))
+        db.session.add(Roles(1,'admin'))
         db.session.commit()
-        db.session.add(Roles('user'))
+        db.session.add(Roles(2,'user'))
         db.session.commit()
     if not Users.query.all():
-        db.session.add(Users('18pd28','Raghul','Data Science',4,'25112000',2))
+        db.session.add(Users('18pd28','Raghul','Data Science',4,'25112000',1))
         db.session.commit()
-        db.session.add(Users('18pd16','Lingesh','Data Science',4,'rjofficio',1))
+        db.session.add(Users('18pd16','Lingesh','Data Science',4,'rjofficio',2))
         db.session.commit()
+    if not SpecialRights.query.all():
+        db.session.add(SpecialRights(1,True,True,True,True,True,True,True,True))
+        db.session.add(SpecialRights(2,False,False,False,False,False,False,False,False))
+        db.session.commit()
+
+
+
+def getSpecialRights(userId):
+    rights=SpecialRights.query.filter_by(userId=userId)    
+    records=[]
+    for rows in rights:
+        records.append((rows.colId, rows.userId, rows.create, rows.read, rows.update, rows.delete, rows.rolesTable, rows.usersTable, rows.courseTable, rows.timeTable))
+    return records 
+
 
 #Register user    
-
 def registerUser(rollNo, name, programme, accYear, password, roles):
     exist=Roles.query.filter_by(role=roles).first()    
     if exist:
