@@ -134,6 +134,7 @@ def handleDb():
         db.session.commit()
 
 
+
 def getSpecialRights(userId):
     rights=SpecialRights.query.filter_by(userId=userId)    
     records=[]
@@ -148,9 +149,6 @@ def registerUser(rollNo, name, programme, accYear, password, roles):
     if exist:
         db.session.add(Users(rollNo, name, programme, accYear, password, exist.adminId))
         db.session.commit()
-        return 1
-    else:
-        return 0
     
 #Select email to check if there is no matching email   
 def selectRoll(rollNo):

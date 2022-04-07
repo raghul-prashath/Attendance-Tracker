@@ -19,16 +19,13 @@ class register(Resource):
             return {'message':'Bad Request','Format': 'False'}, 401
 
         if records == None:
-            ret = registerUser(rollNo, name, programme, accYear, password, 'user')
-            if ret==1:
-                access_token = create_access_token(identity = rollNo)
-                refresh_token = create_refresh_token(identity = rollNo) 
-                resp=jsonify({'message':'registered successfully', 'Format': 'True'})
-                set_access_cookies(resp,access_token)
-                set_refresh_cookies(resp,refresh_token)
-                return make_response(resp, 200)
-            else:
-                return {'message':"'user' don't exist", 'Format': 'False'}, 401    
+            registerUser(rollNo, name, programme, accYear, password, 'user')
+            access_token = create_access_token(identity = rollNo)
+            refresh_token = create_refresh_token(identity = rollNo) 
+            resp=jsonify({'message':'registered successfully', 'Format': 'True'})
+            set_access_cookies(resp,access_token)
+            set_refresh_cookies(resp,refresh_token)
+            return make_response(resp, 200)
 
         else:
             return {'message':'user exist', 'Format': 'False'}, 401
