@@ -4,8 +4,21 @@ services:
       context: .
       dockerfile: Dockerfile.api
     image: react-flask-app-api
+
+  mysql:
+    container_name: mydatabase2
+    image: mysql/mysql-server
+    restart: unless-stopped
     ports:
-      - "5000:5000"
+      - "3306:3306"
+
+    environment:
+      # credentials
+      MYSQL_ROOT_PASSWORD: Root@123
+      MYSQL_DATABASE: attendanceTracker
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+
   client:
     build:
       context: .
