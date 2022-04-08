@@ -6,12 +6,13 @@ class Controllers(ModelView):
     def inaccessible_callback(self,name,**kwargs):
         return redirect(url_for('adminLogin'))
 
+
 class UsersController(Controllers):
     column_list = ('adminId', 'rollNo', 'name', 'programme', 'accYear')
     def is_accessible(self):
         records=getSpecialRights(current_user.userId)
         for record in records:
-            if bool(record[7]) and bool(record[3]):
+            if bool(record[6]):
                 return True
         return False
         
@@ -19,7 +20,15 @@ class UsersController(Controllers):
     def can_create(self):
         records=getSpecialRights(current_user.userId)
         for record in records:
-            if bool(record[7]) and bool(record[2]):
+            if bool(record[2]):
+                return True
+        return False
+
+    @property
+    def can_read(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[3]):
                 return True
         return False
 
@@ -27,7 +36,7 @@ class UsersController(Controllers):
     def can_edit(self):
         records=getSpecialRights(current_user.userId)
         for record in records:
-            if bool(record[7]) and bool(record[4]):
+            if bool(record[4]):
                 return True
         return False
 
@@ -35,18 +44,133 @@ class UsersController(Controllers):
     def can_delete(self):
         records=getSpecialRights(current_user.userId)
         for record in records:
-            if bool(record[7]) and bool(record[5]):
+            if bool(record[5]):
+                return True
+        return False
+
+class courseController(Controllers):
+    def is_accessible(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[7]):
+                return True
+        return False
+        
+    @property
+    def can_create(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[2]):
+                return True
+        return False
+
+    @property
+    def can_read(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[3]):
+                return True
+        return False
+        
+    @property
+    def can_edit(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[4]):
+                return True
+        return False
+
+    @property
+    def can_delete(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[5]):
+                return True
+        return False
+
+class timetableController(Controllers):
+    def is_accessible(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[8]):
+                return True
+        return False
+        
+    @property
+    def can_create(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[2]):
+                return True
+        return False
+
+    @property
+    def can_read(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[3]):
+                return True
+        return False
+        
+    @property
+    def can_edit(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[4]):
+                return True
+        return False
+
+    @property
+    def can_delete(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[5]):
                 return True
         return False
 
 
-class RolesController(Controllers):
-    column_list = ('adminId', 'role')
-
 class spController(Controllers):
-    column_list = ('adminId','create','read','update','delete','rolesTable','usersTable','courseTable','timeTable')
-
+    column_list = ('role','adminId','create','read','update','delete','usersTable','courseTable','timeTable')
+    def is_accessible(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[9]):
+                return True
+        return False
         
+    @property
+    def can_create(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[2]):
+                return True
+        return False
+
+    @property
+    def can_read(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[3]):
+                return True
+        return False
+        
+    @property
+    def can_edit(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[4]):
+                return True
+        return False
+
+    @property
+    def can_delete(self):
+        records=getSpecialRights(current_user.userId)
+        for record in records:
+            if bool(record[5]):
+                return True
+        return False
+
+
 @event.listens_for(Users.password,'set',retval=True)
 def hashPass(target,value,oldvalue,initiator):
     if value != oldvalue:

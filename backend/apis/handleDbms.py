@@ -1,20 +1,41 @@
 from . import *
-        
-class Roles(db.Model):
-    __tablename__ = "roles"
+
+
+class SpecialRights(db.Model):
+    __tablename__="specialRights"
+    
+    
     adminId= db.Column('adminId', db.Integer,primary_key=True)
     role=db.Column('role', db.String,unique=True, nullable=False)
-    
-    def __init__(self, adminId, role):
+
+    create = db.Column('create',db.Boolean)
+    read = db.Column('read',db.Boolean)
+    update = db.Column('update',db.Boolean)
+    delete = db.Column('delete',db.Boolean)
+    usersTable=db.Column('usersTable',db.Boolean)
+    courseTable=db.Column('userLikeTable',db.Boolean)
+    timeTable=db.Column('commentTable',db.Boolean)
+    spTable=db.Column('spTable',db.Boolean)
+
+    def __init__(self,adminId,role,create,read,update,delete,usersTable,courseTable,timeTable,spTable):
+        self.adminId=adminId
         self.role = role
-        self.adminId = adminId
+        self.create = create
+        self.read = read
+        self.update = update
+        self.delete = delete
+        self.usersTable=usersTable
+        self.courseTable=courseTable
+        self.timeTable=timeTable
+        self.spTable=spTable
+
 
     
 class Users(db.Model, UserMixin):
     __tablename__ = "users"
     userId = db.Column('userId',db.Integer, primary_key=True)
-    adminId = db.Column('adminId',db.Integer, db.ForeignKey('roles.adminId'))
-    roles = db.relationship("Roles", backref='adminId_roles')
+    adminId = db.Column('adminId',db.Integer, db.ForeignKey('specialRights.adminId'))
+    roles = db.relationship("SpecialRights", backref='adminId_SpecialRights')
     name = db.Column('name', db.String)
     programme = db.Column('programme', db.String)
     rollNo = db.Column('rollNo', db.String, unique=True)
@@ -30,7 +51,7 @@ class Users(db.Model, UserMixin):
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
         
     def get_id(self):
-        return (self.userId)
+        return (self.adminId)
 
 
 class Course(db.Model):
@@ -85,67 +106,34 @@ class Timetable(db.Model):
         return (self.classId)
 
 
-class SpecialRights(db.Model):
-    __tablename__="specialRights"
-    colId= db.Column('colId',db.Integer,primary_key=True)
-    # userId=db.Column('userId',db.Integer,db.ForeignKey('users.userId'))
-    # users = db.relationship("Users", backref='userId_specialRights')
 
-    userId=db.Column('adminId',db.Integer,db.ForeignKey('roles.adminId'))
-    adminId = db.relationship("Roles", backref='userId_specialRights')
-
-    create = db.Column('create',db.Boolean)
-    read = db.Column('read',db.Boolean)
-    update = db.Column('update',db.Boolean)
-    delete = db.Column('delete',db.Boolean)
-    rolesTable=db.Column('rolesTable',db.Boolean)
-    usersTable=db.Column('usersTable',db.Boolean)
-    courseTable=db.Column('userLikeTable',db.Boolean)
-    timeTable=db.Column('commentTable',db.Boolean)
-    
-
-    def __init__(self,userId,create,read,update,delete,rolesTable,usersTable,courseTable,timeTable):
-        self.userId=userId
-        self.create = create
-        self.read = read
-        self.update = update
-        self.delete = delete
-        self.rolesTable=rolesTable
-        self.usersTable=usersTable
-        self.courseTable=courseTable
-        self.timeTable=timeTable
         
 # handleDb to Handle initial Db operations
 def handleDb():
     db.create_all()    
-    if not Roles.query.all():
-        db.session.add(Roles(1,'admin'))
-        db.session.commit()
-        db.session.add(Roles(2,'user'))
+    if not SpecialRights.query.all():
+        db.session.add(SpecialRights(1,'admin',True,True,True,True,True,True,True,True))
+        db.session.add(SpecialRights(2,'user',False,False,False,False,False,False,False,False))
         db.session.commit()
     if not Users.query.all():
         db.session.add(Users('18pd28','Raghul','Data Science',4,'25112000',1))
         db.session.commit()
         db.session.add(Users('18pd16','Lingesh','Data Science',4,'rjofficio',2))
         db.session.commit()
-    if not SpecialRights.query.all():
-        db.session.add(SpecialRights(1,True,True,True,True,True,True,True,True))
-        db.session.add(SpecialRights(2,False,False,False,False,False,False,False,False))
-        db.session.commit()
+    
 
 
-
-def getSpecialRights(userId):
-    rights=SpecialRights.query.filter_by(userId=userId)    
+def getSpecialRights(adminId):
+    rights=SpecialRights.query.filter_by(adminId=adminId)    
     records=[]
     for rows in rights:
-        records.append((rows.colId, rows.userId, rows.create, rows.read, rows.update, rows.delete, rows.rolesTable, rows.usersTable, rows.courseTable, rows.timeTable))
+        records.append((rows.adminId, rows.role, rows.create, rows.read, rows.update, rows.delete, rows.usersTable, rows.courseTable, rows.timeTable, rows.spTable))
     return records 
 
 
 #Register user    
 def registerUser(rollNo, name, programme, accYear, password, roles):
-    exist=Roles.query.filter_by(role=roles).first()    
+    exist=SpecialRights.query.filter_by(role=roles).first()    
     if exist:
         db.session.add(Users(rollNo, name, programme, accYear, password, exist.adminId))
         db.session.commit()

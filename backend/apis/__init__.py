@@ -26,11 +26,11 @@ db = SQLAlchemy(app)
 from apis.models import MyAdminIndexView
 admin = Admin(app,name='Admin Panel',template_mode='bootstrap3',index_view=MyAdminIndexView())
 
-from apis.handleDbms import Roles,Users,Course,Timetable
+from apis.handleDbms import Users,Course,Timetable
 from apis.handleDbms import handleDb,getSpecialRights,SpecialRights
 handleDb()
 from apis.handleDbms import selectRoll,checkUserId
-from apis.handleAdmin import Controllers, UsersController, RolesController, spController
+from apis.handleAdmin import Controllers, UsersController, spController, timetableController,  courseController
 from apis.handleAdmin import hashPass,load_user,adminLogin,adminLogout
 from apis.appModels import register,login,refresh,logout
 from apis.appModels import user,tokenData

@@ -1,4 +1,6 @@
 from datetime import timedelta 
+import os
+import pymysql
 
 class Config(object):
     DEBUG = False
@@ -6,6 +8,12 @@ class Config(object):
     SECRET_KEY = 'Secret_key'
     JWT_SECRET_KEY = 'secret_key'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///timetable.db'
+    # SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@{}/{}'.format(
+    #     os.getenv('DB_USER', 'user'),
+    #     os.getenv('DB_PASSWORD', 'password'),
+    #     os.getenv('DB_HOST', 'mydatabase'),
+    #     os.getenv('DB_NAME', 'attendanceTracker')
+    #     )
     SQLALCHEMY_TRACK_MODIFICATIONS= True
     COOKIE_SECURE = False
     ACCESS_COOKIE_NAME = 'access_token_cookie'
