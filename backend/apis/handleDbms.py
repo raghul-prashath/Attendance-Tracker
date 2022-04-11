@@ -6,8 +6,7 @@ class SpecialRights(db.Model):
     
     
     adminId= db.Column('adminId', db.Integer,primary_key=True)
-    role=db.Column('role', db.String,unique=True, nullable=False)
-
+    role=db.Column('role', db.String(30), unique=True, nullable=False)
     create = db.Column('create',db.Boolean)
     read = db.Column('read',db.Boolean)
     update = db.Column('update',db.Boolean)
@@ -36,11 +35,11 @@ class Users(db.Model, UserMixin):
     userId = db.Column('userId',db.Integer, primary_key=True)
     adminId = db.Column('adminId',db.Integer, db.ForeignKey('specialRights.adminId'))
     roles = db.relationship("SpecialRights", backref='adminId_SpecialRights')
-    name = db.Column('name', db.String)
-    programme = db.Column('programme', db.String)
-    rollNo = db.Column('rollNo', db.String, unique=True)
+    name = db.Column('name', db.String(30))
+    programme = db.Column('programme', db.String(30))
+    rollNo = db.Column('rollNo', db.String(30), unique=True)
     accYear = db.Column('accYear', db.Integer)
-    password = db.Column('password', db.String)
+    password = db.Column('password', db.String(300))
     
     def __init__(self, rollNo, name, programme, accYear, password, adminId):
         self.adminId=adminId
@@ -57,9 +56,9 @@ class Users(db.Model, UserMixin):
 class Course(db.Model):
     __tablename__ = 'course'
     courseId = db.Column('courseId', db.Integer, primary_key=True)
-    courseCode = db.Column('courseCode', db.String)
-    courseName = db.Column('courseName', db.String)
-    rollNo = db.Column('rollNo', db.String)
+    courseCode = db.Column('courseCode', db.String(30))
+    courseName = db.Column('courseName', db.String(30))
+    rollNo = db.Column('rollNo', db.String(30))
     totalP = db.Column('totalPresent', db.Integer)
     totalA = db.Column('totalAbsent', db.Integer)
     totalC = db.Column('totalClass', db.Integer)
@@ -81,15 +80,15 @@ class Course(db.Model):
 class Timetable(db.Model):
     __tablename__ = 'timetable'
     classId = db.Column('classId', db.Integer, primary_key=True)
-    courseCode = db.Column('courseCode', db.String)
+    courseCode = db.Column('courseCode', db.String(30))
     accYear = db.Column('accYear', db.Integer)
-    programme = db.Column('programme', db.String)
-    day = db.Column('day', db.String)
+    programme = db.Column('programme', db.String(30))
+    day = db.Column('day', db.String(30))
     stHour = db.Column('stHour', db.Integer)
     endHour = db.Column('endHour', db.Integer)
     stTime = db.Column('stTime', db.DateTime)
     endTime = db.Column('endTime', db.DateTime)
-    classRoom = db.Column('roomName', db.String)
+    classRoom = db.Column('roomName', db.String(30))
 
     def __init__(self, courseCode, accYear, Programme, day, stHour, endHour, stTime, endTime, classRoom):
         self.courseCode = courseCode

@@ -1,28 +1,50 @@
+version: '3.8'
+
 services:
+  mysql:
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    container_name: mydatabase
+    image: mysql:latest
+    # platform: linux/x86_64
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=attendanceTracker
+      - MYSQL_USER=user
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_PASSWORD=password
+    healthcheck:
+      test: "mysqladmin -u root -p$$MYSQL_ROOT_PASSWORD ping --protocol=tcp"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    
+
   api:
     build:
       context: .
       dockerfile: Dockerfile.api
-    image: react-flask-app-api
-
-  mysql:
-    container_name: mydatabase2
-    image: mysql/mysql-server
-    restart: unless-stopped
-    ports:
-      - "3306:3306"
-
+    image: flask
     environment:
-      # credentials
-      MYSQL_ROOT_PASSWORD: Root@123
-      MYSQL_DATABASE: attendanceTracker
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      - MYSQL_DATABASE=attendanceTracker
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_HOST=mydatabase
+    links:
+      - mysql
+    ports:
+      - "5000:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
 
   client:
     build:
       context: .
       dockerfile: Dockerfile.client
-    image: react-flask-app-client
+    image: react
     ports:
       - "3000:80"
