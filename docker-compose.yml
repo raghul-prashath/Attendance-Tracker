@@ -5,7 +5,7 @@ services:
     command: mysqld --default-authentication-plugin=mysql_native_password
     container_name: mydatabase
     image: mysql:latest
-    # platform: linux/x86_64
+    platform: linux/x86_64
     restart: unless-stopped
     ports:
       - "3306:3306"
