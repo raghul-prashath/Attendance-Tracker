@@ -11,8 +11,11 @@ from flask_login import LoginManager,UserMixin,login_user,current_user,logout_us
 #SQLAlchemy
 from sqlalchemy import event
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 app.config.from_object("config.DevelopmentConfig")
 
 bcrypt = Bcrypt(app)
@@ -32,7 +35,7 @@ handleDb()
 from apis.handleDbms import selectRoll,checkUserId
 from apis.handleAdmin import Controllers, UsersController, spController, timetableController,  courseController
 from apis.handleAdmin import hashPass,load_user,adminLogin,adminLogout
-from apis.appModels import register,login,refresh,logout
+from apis.appModels import register,login,refresh,logout,test
 from apis.appModels import user,tokenData
 from apis.handleAdminPanel import addView
 from apis.routes import routesApi

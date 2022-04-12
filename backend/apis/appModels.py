@@ -1,5 +1,10 @@
 from . import *
         
+#test
+class test(Resource):
+    def get(self):
+        return {"message": "Hello World!"}, 200
+
 #Register
 class register(Resource):
     def post(self):
