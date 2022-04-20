@@ -1,6 +1,0 @@
-version: '2'
-task_definition:
-  services: 
-    app: 
-      cpu_shares: 100
-      mem_limit: 524288000
