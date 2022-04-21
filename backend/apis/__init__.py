@@ -32,11 +32,11 @@ admin = Admin(app,name='Admin Panel',template_mode='bootstrap3',index_view=MyAdm
 from apis.handleDbms import Users,Course,Timetable
 from apis.handleDbms import handleDb,getSpecialRights,SpecialRights
 handleDb()
-from apis.handleDbms import selectRoll,checkUserId
+from apis.handleDbms import selectRoll,checkUserId,registerUser
 from apis.handleAdmin import Controllers, UsersController, spController, timetableController,  courseController
 from apis.handleAdmin import hashPass,load_user,adminLogin,adminLogout
 from apis.appModels import register,login,refresh,logout,test
-from apis.appModels import user,tokenData
+from apis.appModels import tokenData
 from apis.handleAdminPanel import addView
 from apis.routes import routesApi
 

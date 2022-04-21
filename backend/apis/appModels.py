@@ -45,7 +45,7 @@ class login(Resource):
         if records == None:
             return {'message':'Bad Request','Format': 'False'}, 401   
 
-        elif bcrypt.check_password_hash(records[5],password):
+        elif bcrypt.check_password_hash(records[6],password):
             access_token = create_access_token(identity = rollNo)
             refresh_token = create_refresh_token(identity = rollNo)
             resp = jsonify({'message':'Login successfully', 'Format': 'True'})
@@ -55,11 +55,6 @@ class login(Resource):
 
         else:   
             return {'message':'invalid username or password', 'Format': 'False'}, 401
-
-class user(Resource):
-    def get(self, userId):
-        user = getUser(userId)
-        return user
 
 #Logout
 class logout(Resource):
