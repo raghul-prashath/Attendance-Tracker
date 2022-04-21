@@ -3,11 +3,11 @@ import axios from 'axios';
 
 export default class Test extends React.Component {
   state = {
-    testData : "Rp"
+    testData : "Hello World!"
   }
 
   componentDidMount() {
-    axios.get(`http://localhost:5000/test`)
+    axios.get(`http://flaskapi:5000/test`)
       .then(res => {
         console.log(res);
         const testData = res.data;
@@ -18,6 +18,7 @@ export default class Test extends React.Component {
   render() {
     return (
       <ul>
+        Hello World!
         {
           this.state.testData.message
         }

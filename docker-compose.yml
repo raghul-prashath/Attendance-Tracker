@@ -22,7 +22,7 @@ services:
       start_period: 10s
     
 
-  api:
+  flaskapi:
     build:
       context: .
       dockerfile: Dockerfile.api
@@ -55,7 +55,7 @@ services:
     ports:
       - "80:80"
     links:
-      - api
+      - flaskapi
     depends_on:
-      api:
+      flaskapi:
         condition: service_healthy
