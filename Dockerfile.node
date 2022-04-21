@@ -1,0 +1,6 @@
+FROM node:latest
+WORKDIR /nodeBackend
+COPY nodeBackend ./
+
+RUN npm i
+CMD ["npm", "run", "start"]

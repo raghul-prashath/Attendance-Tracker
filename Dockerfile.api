@@ -1,7 +1,7 @@
 FROM python:3.9
-WORKDIR /backend
+WORKDIR /flaskBackend
 
-COPY backend ./
+COPY flaskBackend ./
 RUN pip install -r ./requirements.txt
 ENV FLASK_ENV production
 

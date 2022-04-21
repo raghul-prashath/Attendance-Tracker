@@ -6,7 +6,7 @@ services:
     container_name: mydatabase
     image: mysql:latest
     platform: linux/x86_64
-    restart: unless-stopped
+    restart: on-failure
     ports:
       - "3306:3306"
     environment:
@@ -14,19 +14,17 @@ services:
       - MYSQL_USER=user
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_PASSWORD=password
-    healthcheck:
-      test: "mysqladmin -u root -p$$MYSQL_ROOT_PASSWORD ping --protocol=tcp"
-      interval: 10s
-      timeout: 10s
-      retries: 20
-      start_period: 10s
+    labels:
+      kompose.service.type: LoadBalancer
+    networks:
+      - jointbridge
     
 
   flaskapi:
     build:
       context: .
       dockerfile: Dockerfile.api
-    image: flask
+    image: foreverrp/flask
     environment:
       - MYSQL_DATABASE=attendanceTracker
       - MYSQL_USER=user
@@ -36,26 +34,49 @@ services:
       - mysql
     ports:
       - "5000:5000"
-    depends_on:
-      mysql:
-        condition: service_healthy
-    healthcheck:
-      test: "curl localhost:5000/test"
-      interval: 10s
-      timeout: 10s
-      retries: 20
-      start_period: 10s
+    restart: on-failure
+    labels:
+      kompose.service.type: LoadBalancer
+    networks:
+      - jointbridge
+
+  nodeapi:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    image: foreverrp/node
+    environment:
+      - MYSQL_DATABASE=attendanceTracker
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_HOST=mydatabase
+    links:
+      - mysql
+    ports:
+      - "3001:3001"
+    restart: on-failure
+    labels:
+      kompose.service.type: LoadBalancer
+    networks:
+      - jointbridge
 
 
   client:
     build:
       context: .
       dockerfile: Dockerfile.client
-    image: react
+    image: foreverrp/react
     ports:
       - "80:80"
     links:
       - flaskapi
-    depends_on:
-      flaskapi:
-        condition: service_healthy
+    restart: on-failure
+    labels:
+      kompose.service.type: LoadBalancer
+    networks:
+      - jointbridge
+
+
+networks:
+  jointbridge:
+    driver : bridge

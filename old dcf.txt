@@ -1,0 +1,99 @@
+version: '3'
+
+services:
+  mysql:
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    container_name: mydatabase
+    image: mysql:latest
+    platform: linux/x86_64
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=attendanceTracker
+      - MYSQL_USER=user
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_PASSWORD=password
+    healthcheck:
+      test: "mysqladmin -u root -p$$MYSQL_ROOT_PASSWORD ping --protocol=tcp"
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 10s
+    networks:
+      - jointBridge
+    
+
+  flaskapi:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: flask
+    environment:
+      - MYSQL_DATABASE=attendanceTracker
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_HOST=mydatabase
+    links:
+      - mysql
+    ports:
+      - "5000:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: "curl localhost:5000/test"
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 10s
+    networks:
+      - jointBridge
+
+  nodeapi:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    image: node
+    environment:
+      - MYSQL_DATABASE=attendanceTracker
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_HOST=mydatabase
+    links:
+      - mysql
+    ports:
+      - "3001:3001"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: "curl localhost:3001/test1"
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 10s
+    networks:
+      - jointBridge
+
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    image: react
+    ports:
+      - "80:80"
+    links:
+      - flaskapi
+    networks:
+      - jointBridge
+    depends_on:
+      flaskapi:
+        condition: service_healthy
+      nodeapi:
+        condition: service_healthy
+
+networks:
+  jointBridge:
+    driver : bridge
