@@ -34,7 +34,7 @@ class register(Resource):
 
         else:
             return {'message':'user exist', 'Format': 'False'}, 401
-
+            
 # Login
 class login(Resource):
     def post(self):

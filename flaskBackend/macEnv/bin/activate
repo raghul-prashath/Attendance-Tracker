@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/raghulprashathka/Documents/work/Timetable/backend/macEnv"
+VIRTUAL_ENV="/Users/raghulprashathka/Documents/work/Timetable/flaskBackend/macEnv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
