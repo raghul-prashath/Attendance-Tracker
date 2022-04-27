@@ -1,10 +1,9 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 import clsx from "https://cdn.skypack.dev/clsx@1.1.1";
 import { useSpring, animated} from 'react-spring';
 import './Home.css';
 import Logout from './Logout.js';
-import {useAuth} from "./auth"
+import { useAuth } from "./auth";
 
 
 const attendanceData = [
@@ -90,7 +89,7 @@ function NameCard({
                 React.createElement("div", { className: "text-sm  mt-2" },`${tasksCompleted} from ${classCompleted} attended`),
                 React.createElement("svg", { className: "w-44 mt-3", height: "6", viewBox: "0 0 200 6", fill: "none", xmlns: "http://www.w3.org/2000/svg"},
                     React.createElement("rect", { width: "200", height: "6", rx: "3", fill: "#2D2D2D"}),
-                    React.createElement(animated.rect, { width: barPlayhead.interpolate((i) => i * (tasksCompleted / classCompleted) * 200), height: "6", rx: "3", fill: "url(#paint0_linear)"}),
+                    React.createElement(animated.rect, { width: barPlayhead.to((i) => i * (tasksCompleted / classCompleted) * 200), height: "6", rx: "3", fill: "url(#paint0_linear)"}),
                     React.createElement("rect", { x: "38", width: "2", height: "6", fill: "#171717"}),
                     React.createElement("rect", { x: "78", width: "2", height: "6", fill: "#171717"}),
                     React.createElement("rect", { x: "118", width: "2", height: "6", fill: "#171717"}),
@@ -113,17 +112,15 @@ function NameCard({
 
 function Home() {
 
-    const {state} = useLocation();
-    console.log({state})
     const [logged] = useAuth();
     
         return(
             <div>
-            {!logged? <div>
+            {!logged ? <div>
                 <h1 className='mt-12 ml-12 content-end font-bold text-white text-2xl'>Attendance Tracker</h1>
                 <Content />
                 <Logout />
-            </div>:         <div><h1 className='mt-12 ml-12 content-end font-bold text-white text-2xl'>Unautherized!</h1></div>}
+            </div>:         <div><h1 className='mt-12 ml-12 content-end font-bold text-white text-2xl'>Unauthorized!</h1></div>}
             </div>
         )
         

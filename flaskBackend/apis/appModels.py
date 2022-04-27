@@ -54,7 +54,7 @@ class login(Resource):
             return make_response(resp, 200)
 
         else:   
-            return {'message':'invalid username or password', 'Format': 'False'}, 401
+            return {'access_token': access_token, 'message':'invalid username or password', 'Format': 'False'}, 401
 
 #Logout
 class logout(Resource):
