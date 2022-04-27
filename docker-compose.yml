@@ -5,7 +5,6 @@ services:
     command: mysqld --default-authentication-plugin=mysql_native_password
     container_name: mydatabase
     image: mysql:latest
-    platform: linux/x86_64
     restart: on-failure
     ports:
       - "3306:3306"
@@ -29,7 +28,7 @@ services:
       - MYSQL_DATABASE=attendanceTracker
       - MYSQL_USER=user
       - MYSQL_PASSWORD=password
-      - MYSQL_HOST=mydatabase
+      - MYSQL_HOST=mysql
     links:
       - mysql
     ports:
@@ -49,7 +48,7 @@ services:
       - MYSQL_DATABASE=attendanceTracker
       - MYSQL_USER=user
       - MYSQL_PASSWORD=password
-      - MYSQL_HOST=mydatabase
+      - MYSQL_HOST=mysql
     links:
       - mysql
     ports:

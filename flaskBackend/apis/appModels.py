@@ -48,7 +48,7 @@ class login(Resource):
         elif bcrypt.check_password_hash(records[6],password):
             access_token = create_access_token(identity = rollNo)
             refresh_token = create_refresh_token(identity = rollNo)
-            resp = jsonify({'message':'Login successfully', 'Format': 'True'})
+            resp = jsonify({'access_token':access_token, 'message':'Login successfully', 'Format': 'True'})
             set_access_cookies(resp, access_token)
             set_refresh_cookies(resp, refresh_token)
             return make_response(resp, 200)

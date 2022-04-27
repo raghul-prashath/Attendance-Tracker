@@ -1,4 +1,4 @@
-#!/home/csuser/Documents/attendanceTracker/backend/ubuntuEnv/bin/python3
+#!/home/csuser/Documents/attendanceTracker/flaskBackend/ubuntuEnv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

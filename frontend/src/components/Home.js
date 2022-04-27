@@ -2,13 +2,15 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import clsx from "https://cdn.skypack.dev/clsx@1.1.1";
 import { useSpring, animated} from 'react-spring';
-import './Home.css'
+import './Home.css';
+import Logout from './Logout.js';
+import {useAuth} from "./auth"
 
 
 const attendanceData = [
     {
       id: 1,
-      name: "Esther Howard",
+      name: "18XD81 Reinforcement Learning",
       transactions: 75,
       rise: false,
       tasksCompleted: 5,
@@ -17,7 +19,7 @@ const attendanceData = [
   
     {
       id: 2,
-      name: "Eleanor Pena",
+      name: "18XD82 NLP",
       transactions: 59,
       rise: false,
       tasksCompleted: 5,
@@ -26,7 +28,7 @@ const attendanceData = [
   
     {
       id: 3,
-      name: "Robert Fox",
+      name: "18XD83 Cloud Computing",
       transactions: 60,
       rise: true,
       tasksCompleted: 1,
@@ -34,7 +36,7 @@ const attendanceData = [
     },
     {
       id: 4,
-      name: "Robert Fox",
+      name: "18XD85 Reinforcement Learning Lab",
       transactions: 26,
       rise: true,
       tasksCompleted: 1,
@@ -67,10 +69,9 @@ function NameCard({
     tasksCompleted,
     classCompleted,
     }) {
-    const { transactions, barPlayhead } = useSpring({
-        transactions: transactionAmount,
+    const { barPlayhead } = useSpring({
         barPlayhead: 1,
-        from: { transactions: 0, barPlayhead: 0 }
+        from: { barPlayhead: 0 }
     });
 
 
@@ -103,7 +104,7 @@ function NameCard({
                 )
             ),
             React.createElement("div",{ className: "flex flex-col-2 items-center" },
-                React.createElement(animated.div, { className: clsx(rise ? "text-green-500" : "text-red-500", "font-bold", "text-lg")}, transactions.interpolate((i) => i+" %")),
+                React.createElement(animated.div, { className: clsx(rise ? "text-green-500" : "text-red-500", "font-bold", "text-lg")}, `${transactionAmount}%`),
             )
         )
     );
@@ -114,25 +115,19 @@ function Home() {
 
     const {state} = useLocation();
     console.log({state})
-    if({state}.state === null){
-        return(
-            <div><h1>Unaotherized!</h1></div>
-        )
-    }
-    else if({state}.state.auth === true){
+    const [logged] = useAuth();
+    
         return(
             <div>
+            {!logged? <div>
                 <h1 className='mt-12 ml-12 content-end font-bold text-white text-2xl'>Attendance Tracker</h1>
                 <Content />
+                <Logout />
+            </div>:         <div><h1 className='mt-12 ml-12 content-end font-bold text-white text-2xl'>Unautherized!</h1></div>}
             </div>
         )
         
     }
-    else{
-        return(
-            <div><h1>Unaotherized!</h1></div>
-        )
-    }   
-}
+
 
 export default Home;

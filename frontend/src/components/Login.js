@@ -2,6 +2,7 @@ import './Login.css';
 import React from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {login} from "./auth"
 
 const mode = 'login';
 class LoginComponent extends React.Component {
@@ -72,6 +73,7 @@ function Login() {
     let navigate = useNavigate();
 
     async function handleSubmit(event) {
+        
         console.log('submit');
         event.preventDefault();   
 
@@ -80,6 +82,7 @@ function Login() {
             axios.post(`http://localhost:5000/users/login`, loginData)
             .then(res => {
                 if(res.status === 200){
+                    login(res.data.access_token)
                     navigate("Home", {state : {auth : true}});
                 }
 

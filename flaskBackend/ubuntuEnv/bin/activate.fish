@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/csuser/Documents/attendanceTracker/backend/ubuntuEnv"
+set -gx VIRTUAL_ENV "/home/csuser/Documents/attendanceTracker/flaskBackend/ubuntuEnv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
