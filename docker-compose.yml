@@ -4,7 +4,7 @@ services:
   mysql:
     command: mysqld --default-authentication-plugin=mysql_native_password
     container_name: mydatabase
-    image: mysql:latest
+    image: foreverrp/mysql
     restart: on-failure
     ports:
       - "3306:3306"
@@ -17,13 +17,15 @@ services:
       kompose.service.type: LoadBalancer
     networks:
       - jointbridge
+    volumes:
+      - database:/var/lib/mysql
     
 
   flaskapi:
     build:
       context: .
       dockerfile: Dockerfile.api
-    image: foreverrp/flask
+    image: flask
     environment:
       - MYSQL_DATABASE=attendanceTracker
       - MYSQL_USER=user
@@ -43,7 +45,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.node
-    image: foreverrp/node
+    image: node
     environment:
       - MYSQL_DATABASE=attendanceTracker
       - MYSQL_USER=user
@@ -58,15 +60,14 @@ services:
       kompose.service.type: LoadBalancer
     networks:
       - jointbridge
-
-
+      
   client:
     build:
       context: .
       dockerfile: Dockerfile.client
-    image: foreverrp/react
+    image: react
     ports:
-      - "80:80"
+      - "3000:3000"
     links:
       - flaskapi
     restart: on-failure
@@ -79,3 +80,6 @@ services:
 networks:
   jointbridge:
     driver : bridge
+
+volumes:
+  database:

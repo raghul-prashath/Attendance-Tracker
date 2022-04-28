@@ -1,9 +1,7 @@
 import React from 'react';
-import clsx from "https://cdn.skypack.dev/clsx@1.1.1";
 import { useSpring, animated} from 'react-spring';
 import './Home.css';
 import Logout from './Logout.js';
-// import axios from 'axios';
 
 const attendanceData = [
     {
@@ -73,7 +71,7 @@ function NameCard({
     });
 
 
-    return React.createElement("div",{
+    return( React.createElement("div",{
         className: "w-full p-2 lg:w-1/3" }, 
         
         React.createElement("div", { className: "rounded-lg bg-card flex justify-between p-3 h-32"},
@@ -101,8 +99,12 @@ function NameCard({
                     )
                 )
             ),
-            React.createElement("div",{ className: "flex flex-col-2 items-center" },
-                React.createElement(animated.div, { className: clsx(rise ? "text-green-500" : "text-red-500", "font-bold", "text-lg")}, `${transactionAmount}%`),
+            <div className = "flex flex-col-2 items-center" >
+                <div className = { "font-bold text-lg " + ( rise ? "text-green-500" : "text-red-500" )}>
+                    {transactionAmount}%
+                </div>
+            </div>
+                
             )
         )
     );
