@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import {logout} from "./auth";
+import Cookies from 'universal-cookie';
+ 
+const cookies = new Cookies();
 
 function Logout() {
 
@@ -10,13 +12,15 @@ function Logout() {
     async function onClick(event) {
         event.preventDefault();   
         console.log("logout")
-        axios.post(`http://localhost:5000/users/logout`, {})
-            .then(res => {
-                if(res.status === 200){
-                    logout();
-                    navigate("Home", {state : {auth : false}});
-                }
 
+        axios.get(`http://localhost:5000/users/logout`, {withCredentials : true})
+            .then(res => {
+                console.log(res)
+                if(res.status === 200){
+                    cookies.remove('access_token_cookie', res.data.access_token, { path: '/' });
+                    sessionStorage.removeItem('token');
+                    navigate("Home");
+                }
             })
     }
 

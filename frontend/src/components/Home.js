@@ -3,8 +3,7 @@ import clsx from "https://cdn.skypack.dev/clsx@1.1.1";
 import { useSpring, animated} from 'react-spring';
 import './Home.css';
 import Logout from './Logout.js';
-import { useAuth } from "./auth";
-
+// import axios from 'axios';
 
 const attendanceData = [
     {
@@ -112,17 +111,20 @@ function NameCard({
 
 function Home() {
 
-    const [logged] = useAuth();
+    const token = sessionStorage.getItem("token");
     
-        return(
-            <div>
-            {!logged ? <div>
+    return(
+        <div>
+            {token && token!== "" && token!==undefined ? <div>
                 <h1 className='mt-12 ml-12 content-end font-bold text-white text-2xl'>Attendance Tracker</h1>
                 <Content />
                 <Logout />
-            </div>:         <div><h1 className='mt-12 ml-12 content-end font-bold text-white text-2xl'>Unauthorized!</h1></div>}
-            </div>
-        )
+            </div>:         
+            <div><h1 className='mt-12 ml-12 content-end font-bold text-white text-2xl'>Unauthorized!</h1></div>}
+        </div>
+    )
+        
+
         
     }
 

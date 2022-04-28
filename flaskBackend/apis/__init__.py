@@ -1,8 +1,8 @@
 #Flask
 from flask import Flask,request,render_template,redirect, url_for,flash,jsonify,make_response
 from flask_bcrypt import Bcrypt
-from flask_jwt_extended import JWTManager,jwt_required,create_access_token,jwt_refresh_token_required
-from flask_jwt_extended import create_refresh_token,get_jwt_identity,set_access_cookies,set_refresh_cookies, unset_jwt_cookies
+from flask_jwt_extended import JWTManager,jwt_required,create_access_token
+from flask_jwt_extended import get_jwt_identity,set_access_cookies, unset_jwt_cookies
 from flask_restful import Resource, Api
 from flask_admin import Admin, AdminIndexView
 from flask_admin.menu import MenuLink
@@ -11,10 +11,19 @@ from flask_login import LoginManager,UserMixin,login_user,current_user,logout_us
 #SQLAlchemy
 from sqlalchemy import event
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+
+#CORS
 CORS(app)
+@app.after_request
+def after_request(response):
+  response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+  response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+  response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+  response.headers.add('Access-Control-Allow-Credentials', 'true')
+  return response
 
 app.config.from_object("config.DevelopmentConfig")
 
@@ -35,7 +44,7 @@ handleDb()
 from apis.handleDbms import selectRoll,checkUserId,registerUser
 from apis.handleAdmin import Controllers, UsersController, spController, timetableController,  courseController
 from apis.handleAdmin import hashPass,load_user,adminLogin,adminLogout
-from apis.appModels import register,login,refresh,logout,test
+from apis.appModels import register,login,loggedout,test
 from apis.appModels import tokenData
 from apis.handleAdminPanel import addView
 from apis.routes import routesApi

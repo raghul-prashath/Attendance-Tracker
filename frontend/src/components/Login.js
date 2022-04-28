@@ -2,7 +2,9 @@ import './Login.css';
 import React from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { login } from "./auth";
+import Cookies from 'universal-cookie';
+ 
+const cookies = new Cookies();
 
 const mode = 'login';
 class LoginComponent extends React.Component {
@@ -79,10 +81,12 @@ function Login() {
 
         if(event.target[7].innerText === 'LOG IN'){
             const loginData = { "rollNo" : event.target[0].value, "password": event.target[1].value}
+            
             axios.post(`http://localhost:5000/users/login`, loginData)
             .then(res => {
                 if(res.status === 200){
-                    login(res.data.access_token);
+                    sessionStorage.setItem("token", res.data.access_token)
+                    cookies.set('access_token_cookie', res.data.access_token, { path: '/' }); 
                     navigate("Home");
                 }
 
@@ -94,6 +98,8 @@ function Login() {
             axios.post(`http://localhost:5000/users/register`, signupData)
             .then(res => {
                 if(res.status === 200){
+                    sessionStorage.setItem("token", res.data.access_token)
+                    cookies.set('access_token_cookie', res.data.access_token, { path: '/' }); 
                     navigate("Home");
                 }
             })
