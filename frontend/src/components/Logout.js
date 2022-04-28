@@ -13,7 +13,7 @@ function Logout() {
         event.preventDefault();   
         console.log("logout")
 
-        axios.get(`http://localhost:5000/users/logout`, {withCredentials : true})
+        axios.get(`http://flaskapi:5000/users/logout`, {withCredentials : true})
             .then(res => {
                 console.log(res)
                 if(res.status === 200){
