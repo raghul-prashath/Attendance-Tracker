@@ -32,7 +32,7 @@ from apis.models import MyAdminIndexView
 admin = Admin(app,name='Admin Panel',template_mode='bootstrap3',index_view=MyAdminIndexView())
 
 from apis.handleDbms import Users,Course,Timetable
-from apis.handleDbms import handleDb,getSpecialRights,SpecialRights
+from apis.handleDbms import handleDb,getSpecialRights,SpecialRights,getAttendance
 handleDb()
 from apis.handleDbms import selectRoll,checkUserId,registerUser
 from apis.handleAdmin import Controllers, UsersController, spController, timetableController,  courseController

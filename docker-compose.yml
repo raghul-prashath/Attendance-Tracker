@@ -40,26 +40,6 @@ services:
       kompose.service.type: LoadBalancer
     networks:
       - jointbridge
-
-  nodeapi:
-    build:
-      context: .
-      dockerfile: Dockerfile.node
-    image: node
-    environment:
-      - MYSQL_DATABASE=attendanceTracker
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=password
-      - MYSQL_HOST=mysql
-    links:
-      - mysql
-    ports:
-      - "8000:8000"
-    restart: on-failure
-    labels:
-      kompose.service.type: LoadBalancer
-    networks:
-      - jointbridge
       
   client:
     build:

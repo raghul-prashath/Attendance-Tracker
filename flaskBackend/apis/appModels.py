@@ -63,5 +63,12 @@ class tokenData(Resource):
     @jwt_required
     def get(self):
         rollNo = get_jwt_identity()
-        return {'rollNo' : rollNo}, 200
+        data = getAttendance(rollNo)
+        if data==None:
+            return {'message':'Empty','Format': 'True'}, 200
+        else:
+            return {'rollNo' : data}, 200
+
+
+
 

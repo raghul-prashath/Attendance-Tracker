@@ -7,7 +7,7 @@ export default class Test extends React.Component {
   }
 
   componentDidMount() {
-    axios.get("/user/test")
+    axios.get("/api/test")
       .then(res => {
         console.log(res);
         const testData = res.data;

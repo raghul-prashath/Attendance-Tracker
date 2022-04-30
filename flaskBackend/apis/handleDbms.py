@@ -145,6 +145,31 @@ def selectRoll(rollNo):
     else:
         return None
 
+def getAttendance(rollNo):
+    atten=Course.query.filter_by(rollNo=rollNo).all()
+    attend = []
+    for attendance in atten:
+        if attendance:
+            at = {}
+            at['id'] = attendance.courseId
+            at['name'] = attendance.courseCode + " " + attendance.courseName
+            at['percent'] = attendance.atPercent
+            
+            if attendance.atPercent < 75:
+                at['rise'] = False
+            else:
+                at['rise'] = True
+            
+            at['totalP'] = attendance.totalP
+            at['totalC'] = attendance.totalC
+
+
+            attend.append(at)
+    if atten:
+        return attend
+    else:
+        return None
+
 #check user Id
 def checkUserId(userId):
     userId=Users.query.filter_by(userId=userId).first()

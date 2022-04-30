@@ -8,11 +8,4 @@ module.exports = function (app) {
       changeOrigin: true,
     })
   );
-  app.use(
-    "/user",
-    createProxyMiddleware({
-      target: "http://nodeapi:8000",
-      changeOrigin: true,
-    })
-  );
 };

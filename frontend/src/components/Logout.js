@@ -23,10 +23,15 @@ function Logout() {
                 }
             })
     }
+    const style = {
+        marginLeft: 900,
+        marginTop: -35
+
+      };
 
     return (
-        <div>
-            <button onClick={onClick} className = "mt-12 ml-12 content-end font-bold text-white text-2xl">Logout</button>
+        <div className="ml-72" style={style}>  
+            <button onClick={onClick} className = "ml-72 font-bold text-white text-2xl place-items-end">Logout</button>
         </div>
     );
 }
