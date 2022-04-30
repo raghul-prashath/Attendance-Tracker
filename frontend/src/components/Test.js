@@ -7,7 +7,7 @@ export default class Test extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`http://flaskapi:5000/test`)
+    axios.get("/user/test")
       .then(res => {
         console.log(res);
         const testData = res.data;
@@ -18,7 +18,7 @@ export default class Test extends React.Component {
   render() {
     return (
       <ul>
-        Hello World!
+        Hey !
         {
           this.state.testData.message
         }

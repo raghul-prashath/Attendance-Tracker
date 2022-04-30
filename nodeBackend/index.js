@@ -20,7 +20,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
 // home page
-app.get('/test1', (req, res) => {
+app.get('/test', (req, res) => {
   res.send('Hello World! I am from node!')
 });
 
@@ -31,4 +31,4 @@ app.get('/getUsers', (req, res) => {
     })
 })
 
-app.listen('3001', () => {})
+app.listen('8000', () => {})

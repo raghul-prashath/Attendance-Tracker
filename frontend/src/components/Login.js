@@ -82,7 +82,7 @@ function Login() {
         if(event.target[7].innerText === 'LOG IN'){
             const loginData = { "rollNo" : event.target[0].value, "password": event.target[1].value}
             
-            axios.post(`http://flaskapi:5000/users/login`, loginData)
+            axios.post("/api/users/login", loginData)
             .then(res => {
                 if(res.status === 200){
                     sessionStorage.setItem("token", res.data.access_token)
@@ -95,7 +95,7 @@ function Login() {
         else{
             const signupData = { "rollNo" : event.target[2].value, "name" : event.target[3].value, "programme" : event.target[4].value, "accYear" : event.target[5].value, "password" : event.target[6].value }
             console.log(signupData);
-            axios.post(`http://flaskapi:5000/users/register`, signupData)
+            axios.post("/api/users/register", signupData)
             .then(res => {
                 if(res.status === 200){
                     sessionStorage.setItem("token", res.data.access_token)
