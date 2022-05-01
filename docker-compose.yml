@@ -25,7 +25,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.api
-    image: flask
+    image: foreverrp/flaskapi
     environment:
       - MYSQL_DATABASE=attendanceTracker
       - MYSQL_USER=user
@@ -45,7 +45,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.client
-    image: react
+    image: foreverrp/reactapp
     ports:
       - "3000:3000"
     links:
