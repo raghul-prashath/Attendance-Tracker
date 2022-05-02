@@ -45,7 +45,7 @@ services:
       dockerfile: Dockerfile.client
     image: foreverrp/reactapp
     environment:
-      - REACT_HOST=flaskapi
+      - REACT_HOST=flaskapi-tcp
     ports:
       - "3000:3000"
     links:

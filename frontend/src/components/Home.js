@@ -96,7 +96,6 @@ function Home() {
     return attendanceData ? (
         <div>
             {token && token!== "" && token!==undefined ? <div>
-                <h1 className='mt-12 ml-12 content-end font-bold text-white text-2xl'>Attendance Tracker</h1>
                 <Logout />
                 <Content attendanceData={attendanceData}/>
             </div>:         

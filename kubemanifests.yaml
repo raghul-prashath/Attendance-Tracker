@@ -77,7 +77,7 @@ items:
       containers:
         - env:
             - name: REACT_HOST
-              value: flaskapi
+              value: flaskapi-tcp
           image: foreverrp/reactapp
           name: client
           ports:

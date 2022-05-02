@@ -24,14 +24,15 @@ function Logout() {
             })
     }
     const style = {
-        marginLeft: 900,
-        marginTop: -35
-
+        marginLeft: '80%',
       };
 
     return (
-        <div className="ml-72" style={style}>  
-            <button onClick={onClick} className = "ml-72 font-bold text-white text-2xl place-items-end">Logout</button>
+        <div className='container font-bold text-white text-2xl mt-12 ml-12'>  
+            Attendance Tracker
+            <button className='font-bold text-white text-2xl' onClick={onClick} style={style}>Logout</button>
+            
+            
         </div>
     );
 }
